@@ -149,7 +149,7 @@ func resourceKibanaDashboardCreate(d *schema.ResourceData, meta interface{}) err
 	url = fmt.Sprintf("%v/api/saved_objects/dashboard", url)
 
 	log.Printf("Create new Resource using %v with data %s", url, bodyJson)
-	respBody, err := postRequest(d, meta, url, string(bodyJson))
+	respBody, err := postKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -176,7 +176,7 @@ func resourceKibanaDashboardRead(d *schema.ResourceData, meta interface{}) error
 	//version := d.Get("version")
 
 	url = fmt.Sprintf("%v/api/saved_objects/dashboard/%v", url, objectId)
-	respBody, err := getRequest(d, meta, url)
+	respBody, err := getKibRequest(d, meta, url)
 	if err != nil {
        	    return err
 	}
@@ -196,7 +196,7 @@ func resourceKibanaDashboardUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	url = fmt.Sprintf("%v/api/saved_objects/dashboard/%v", url, objectId)
-	respBody, err := putRequest(d, meta, url, string(bodyJson))
+	respBody, err := putKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -225,7 +225,7 @@ func resourceKibanaDashboardDelete(d *schema.ResourceData, meta interface{}) err
 	d.Set("version", nil)
 
 	url = fmt.Sprintf("%v/api/saved_objects/dashboard/%v", url, objectId)
-	_, err := deleteRequest(d, meta, url)
+	_, err := deleteKibRequest(d, meta, url)
 	if err != nil {
        		return err    
 	}

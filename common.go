@@ -8,23 +8,23 @@ import (
 )
 
 type SavedObjectHeader struct {
-        Id string `json:"id"`
-        ObjectType string `json:"type"`
-        UpdatedAt string `json:"updated_at"`
-        Version int `json:"version"`
+        Id string `json:"id,omitempty"`
+        ObjectType string `json:"type,omitempty"`
+        UpdatedAt string `json:"updated_at,omitempty"`
+        Version int `json:"version,omitempty"`
 	Attributes interface{} `json:"attributes"`
 }
 
 
 
 
-func getClient(d *schema.ResourceData, meta interface{}) *http.Client {
+func getKibClient(d *schema.ResourceData, meta interface{}) *http.Client {
 	return &http.Client{}
 }
 
-func genericRequest(requestType string, d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error ) {
+func genericKibRequest(requestType string, d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error ) {
 
-	client := getClient(d, meta)
+	client := getKibClient(d, meta)
 
 	var req *http.Request
 	var err error
@@ -41,6 +41,9 @@ func genericRequest(requestType string, d *schema.ResourceData, meta interface{}
         req.Header.Add("content-type", "application/json")
 
 	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 
 	defer resp.Body.Close()
 	
@@ -52,18 +55,18 @@ func genericRequest(requestType string, d *schema.ResourceData, meta interface{}
 	return &respBody, nil
 }
 
-func postRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
-	return genericRequest("POST", d, meta, url, buffer)
+func postKibRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
+	return genericKibRequest("POST", d, meta, url, buffer)
 }
 
-func getRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
-	return genericRequest("GET", d, meta, url, "")
+func getKibRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
+	return genericKibRequest("GET", d, meta, url, "")
 }
 
-func putRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
-	return genericRequest("PUT", d, meta, url, buffer)
+func putKibRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
+	return genericKibRequest("PUT", d, meta, url, buffer)
 }
 
-func deleteRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
-	return genericRequest("DELETE", d, meta, url, "")
+func deleteKibRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
+	return genericKibRequest("DELETE", d, meta, url, "")
 }

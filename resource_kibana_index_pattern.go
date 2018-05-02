@@ -52,7 +52,7 @@ func resourceElasticIndexPatternCreate(d *schema.ResourceData, meta interface{})
 
 	url = fmt.Sprintf("%v/api/saved_objects/index-pattern", url)
 
-	respBody, err := postRequest(d, meta, url, body)
+	respBody, err := postKibRequest(d, meta, url, body)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func resourceElasticIndexPatternRead(d *schema.ResourceData, meta interface{}) e
 	//version := d.Get("version")
 
 	url = fmt.Sprintf("%v/api/saved_objects/index-pattern/%v", url, objectId)
-	respBody, err := getRequest(d, meta, url)
+	respBody, err := getKibRequest(d, meta, url)
 	if err != nil {
        	    return err
 	}
@@ -101,7 +101,7 @@ func resourceElasticIndexPatternUpdate(d *schema.ResourceData, meta interface{})
 	body := d.Get("body").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/index-pattern/%v", url, objectId)
-	respBody, err := putRequest(d, meta, url, body)
+	respBody, err := putKibRequest(d, meta, url, body)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func resourceElasticIndexPatternDelete(d *schema.ResourceData, meta interface{})
 	d.Set("version", nil)
 
 	url = fmt.Sprintf("%v/api/saved_objects/index-pattern/%v", url, objectId)
-	_, err := deleteRequest(d, meta, url)	
+	_, err := deleteKibRequest(d, meta, url)	
 	if err != nil {
        		return err    
 	}

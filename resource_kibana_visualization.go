@@ -120,7 +120,7 @@ func resourceKibanaVisualizationCreate(d *schema.ResourceData, meta interface{})
 	url = fmt.Sprintf("%v/api/saved_objects/visualization", url)
 
 	log.Printf("Create new Resource using %v with data %s", url, bodyJson)
-	respBody, err := postRequest(d, meta, url, string(bodyJson))
+	respBody, err := postKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func resourceKibanaVisualizationRead(d *schema.ResourceData, meta interface{}) e
 	//version := d.Get("version")
 
 	url = fmt.Sprintf("%v/api/saved_objects/visualization/%v", url, objectId)
-	respBody, err := getRequest(d, meta, url)
+	respBody, err := getKibRequest(d, meta, url)
 	if err != nil {
        	    return err
 	}
@@ -172,7 +172,7 @@ func resourceKibanaVisualizationUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	url = fmt.Sprintf("%v/api/saved_objects/visualization/%v", url, objectId)
-	respBody, err := putRequest(d, meta, url, string(bodyJson))
+	respBody, err := putKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -201,7 +201,7 @@ func resourceKibanaVisualizationDelete(d *schema.ResourceData, meta interface{})
 	d.Set("version", nil)
 
 	url = fmt.Sprintf("%v/api/saved_objects/visualization/%v", url, objectId)
-	_, err := deleteRequest(d, meta, url)
+	_, err := deleteKibRequest(d, meta, url)
 	if err != nil {
        		return err    
 	}

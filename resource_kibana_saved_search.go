@@ -180,7 +180,7 @@ func resourceKibanaSavedSearchCreate(d *schema.ResourceData, meta interface{}) e
 
 	url = fmt.Sprintf("%v/api/saved_objects/search", url)
 
-	respBody, err := postRequest(d, meta, url, string(bodyJson))
+	respBody, err := postKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -207,7 +207,7 @@ func resourceKibanaSavedSearchRead(d *schema.ResourceData, meta interface{}) err
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
 
-	respBody, err := getRequest(d, meta, url)
+	respBody, err := getKibRequest(d, meta, url)
 	if err != nil {
        	    return err
 	}
@@ -233,7 +233,7 @@ func resourceKibanaSavedSearchUpdate(d *schema.ResourceData, meta interface{}) e
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
 
-	respBody, err := putRequest(d, meta, url, string(bodyJson))
+	respBody, err := putKibRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
@@ -255,7 +255,7 @@ func resourceKibanaSavedSearchDelete(d *schema.ResourceData, meta interface{}) e
 	objectId := d.Id()
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
-	_, err := deleteRequest(d, meta, url)
+	_, err := deleteKibRequest(d, meta, url)
 	if err != nil {
        		return err    
 	}

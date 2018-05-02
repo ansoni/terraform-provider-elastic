@@ -21,6 +21,28 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Plea
 
 You should have a whole bunch of visualizations built off of the Shakespeare example
 
+# Generic Saved-Object
+
+Supported Types:  timelion-sheet, index-pattern, search, visualization, dashboard
+
+Use a template to modify a SavedSearch Attributes item
+
+	data "template_file" "timelion" {
+		template = <<EOF
+	{"hits": 0, "description": "", "timelion_rows": 2, "title": "$${title}", "version": 1, "timelion_chart_height": 275, "timelion_sheet": [".es(*).abs()"], "timelion_columns": 2, "timelion_interval": "auto"}
+EOF
+		vars {
+			title = "rar"
+		}
+	}
+	
+        resource "elastic_kibana_saved_object" "test" {
+		attributes = "${data.template_file.timelion.rendered}"
+		saved_object_type = "timelion-sheet"
+		name = "awesome"
+		description = "w00t"
+	}
+
 # Index-Patterns
 
 	resource "elastic_kibana_index_pattern" "test" {
