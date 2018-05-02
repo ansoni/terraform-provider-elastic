@@ -30,7 +30,7 @@ Use a template to modify a SavedSearch Attributes item
 	data "template_file" "timelion" {
 		template = <<EOF
 	{"hits": 0, "description": "", "timelion_rows": 2, "title": "$${title}", "version": 1, "timelion_chart_height": 275, "timelion_sheet": [".es(*).abs()"], "timelion_columns": 2, "timelion_interval": "auto"}
-EOF
+	EOF
 		vars {
 			title = "rar"
 		}
