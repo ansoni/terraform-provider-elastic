@@ -1,6 +1,6 @@
 # terraform-provider-elastic
 
-A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc)
+A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Please test and provide feedback and examples of things that don't work.  Most of these work along the lines of taking in a raw body output of a Kibana SavedObject.  From their, we modify it with supplied variables which are typically the primary keys of index-patterns, visualizations, etc.  Our goal is to one day be able to create objects without requiring a body at all.
 
 # Build
 
@@ -10,6 +10,16 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc)
 # Install
 
 	cp terraform-provider-elastic ~/.terraform.d/plugins/	
+
+# Run Example
+
+	cd example
+	docker-compose up
+	bash load_data.sh
+	terraform init
+	terraform apply
+
+You should have a whole bunch of visualizations built off of the Shakespeare example
 
 # Index-Patterns
 
@@ -70,8 +80,6 @@ body : A Kibana exported Saved Search
 
 - [ ] No SSL
 - [ ] No Auth
-- [ ] No Visualization Support
-- [ ] No Dashboard Support
 - [ ] No Watcher Support
 - [ ] No Graph Support
 - [ ] No Canvas Support

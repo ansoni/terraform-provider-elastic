@@ -3,9 +3,6 @@ package main
 import (
 	"github.com/hashicorp/terraform/helper/schema"
         _ "github.com/hashicorp/terraform/terraform"
-	"io/ioutil"
-	"net/http"
-	"bytes"
 	"log"
 	"fmt"
 	_ "errors"
@@ -183,28 +180,13 @@ func resourceKibanaSavedSearchCreate(d *schema.ResourceData, meta interface{}) e
 
 	url = fmt.Sprintf("%v/api/saved_objects/search", url)
 
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyJson))
-	if err != nil {
-		return err
-	}
-	req.Header.Add("kbn-xsrf", "true")
-	req.Header.Add("content-type", "application/json")
-
-	log.Printf("POST new search to %v", url)
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := postRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
 
 	var savedSearchResponse SavedSearchHeader
-	json.Unmarshal(respBody, &savedSearchResponse)	
+	json.Unmarshal(*respBody, &savedSearchResponse)	
 
 	log.Printf("Raw Body: %s", respBody)
 	log.Printf("ID: %s", savedSearchResponse.Id)
@@ -221,31 +203,17 @@ func resourceKibanaSavedSearchCreate(d *schema.ResourceData, meta interface{}) e
 
 func resourceKibanaSavedSearchRead(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
-	objectId := d.Get("object_id")
-	//version := d.Get("version")
+	objectId := d.Id()
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("kbn-xsrf", "true")
-	req.Header.Add("content-type", "application/json")
-	log.Printf("Get existing saved-search with %v", url)
-	resp, err := client.Do(req)
-	if err != nil {
-       	    return err
-	}
-	defer resp.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := getRequest(d, meta, url)
 	if err != nil {
        	    return err
 	}
 	log.Printf("Read %v => %v", url, respBody)
 	var savedSearch SavedSearch
-	json.Unmarshal(respBody, &savedSearch)	
+	json.Unmarshal(*respBody, &savedSearch)	
 /*
 	if savedSearch.Version != version {
 		return errors.New(fmt.Sprintf("Index Pattern has been modified.  Found version %v, Expected version %v", err, savedSearch.Version, version))
@@ -257,34 +225,21 @@ func resourceKibanaSavedSearchRead(d *schema.ResourceData, meta interface{}) err
 
 func resourceKibanaSavedSearchUpdate(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
-	objectId := d.Get("object_id")
+	objectId := d.Id()
 	bodyJson, err := generateSavedSearch(d)
 	if err != nil {
 		return err
 	}
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
-	client := &http.Client{}
-	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(bodyJson))
-	if err != nil {
-		return err
-	}
-	req.Header.Add("kbn-xsrf", "true")
-	req.Header.Add("content-type", "application/json")
-	log.Printf("Update saved-search to %v", url)
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := putRequest(d, meta, url, string(bodyJson))
 	if err != nil {
 		return err
 	}
 
 	var savedSearchHeader SavedSearchHeader
-	json.Unmarshal(respBody, &savedSearchHeader)	
+	json.Unmarshal(*respBody, &savedSearchHeader)	
 	log.Printf("Raw Body: %s", respBody)
 	log.Printf("ID: %s", savedSearchHeader.Id)
 	log.Printf("ObjectType: %s", savedSearchHeader.ObjectType)
@@ -297,24 +252,14 @@ func resourceKibanaSavedSearchUpdate(d *schema.ResourceData, meta interface{}) e
 
 func resourceKibanaSavedSearchDelete(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
-	objectId := d.Get("object_id")
-
-	d.Set("object_id", nil)
-	d.Set("version", nil)
+	objectId := d.Id()
 
 	url = fmt.Sprintf("%v/api/saved_objects/search/%v", url, objectId)
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", url, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("kbn-xsrf", "true")
-	req.Header.Add("content-type", "application/json")
-	log.Printf("DELETE saved-search to %v", url)
-	_, err = client.Do(req)
+	_, err := deleteRequest(d, meta, url)
 	if err != nil {
        		return err    
 	}
+	d.SetId("")
 	return nil
 }
 

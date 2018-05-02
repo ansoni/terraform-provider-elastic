@@ -15,10 +15,24 @@ func Provider() terraform.ResourceProvider {
                                 DefaultFunc: schema.EnvDefaultFunc("KIBANA_URL", nil),
                                 Description: "Elasticsearch URL",
                         },
+			"kibana_username": &schema.Schema{
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                DefaultFunc: schema.EnvDefaultFunc("KIBANA_USERNAME", nil),
+                                Description: "Elasticsearch Username",
+                        },
+			"kibana_password": &schema.Schema{
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                DefaultFunc: schema.EnvDefaultFunc("KIBANA_PASSWORD", nil),
+                                Description: "Elasticsearch Password",
+                        },
 		},
                 ResourcesMap: map[string]*schema.Resource{
-			"elastic_kibana_index_pattern":      resourceKibanaIndexPattern(),
-			"elastic_kibana_saved_search":      resourceKibanaSavedSearch(),
+			"elastic_kibana_index_pattern":  resourceKibanaIndexPattern(),
+			"elastic_kibana_saved_search":   resourceKibanaSavedSearch(),
+			"elastic_kibana_visualization":  resourceKibanaVisualization(),
+			"elastic_kibana_dashboard":      resourceKibanaDashboard(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -30,7 +44,7 @@ type ElasticInfo struct {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	url := d.Get("url").(string)
+	url := d.Get("kibana_url").(string)
 	elasticInfo := &ElasticInfo{kibanaUrl: url}	
 	return elasticInfo, nil
 }
