@@ -36,7 +36,7 @@ Use a template to modify a SavedSearch Attributes item
 		}
 	}
 	
-        resource "elastic_kibana_saved_object" "test" {
+	resource "elastic_kibana_saved_object" "test" {
 		attributes = "${data.template_file.timelion.rendered}"
 		saved_object_type = "timelion-sheet"
 		name = "awesome"
@@ -105,7 +105,3 @@ body : A Kibana exported Saved Search
 - [ ] No Watcher Support
 - [ ] No Graph Support
 - [ ] No Canvas Support
-- [ ] No TimeLion Support
-
-
-
