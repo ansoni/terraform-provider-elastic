@@ -57,7 +57,20 @@ Use a template to modify a SavedSearch Attributes item.  The attributes field sh
 
 outputs
 
-id 
+id
+saved_object_type
+title 
+
+# Generic Saved-Object-Content
+
+More advanced Dashboards in Kibana have deep-link to dashboards within visualizations within the Dashboard.  This creates a "chicken and the egg"/circular dependency where we need to know the dashboard id before it has been created.
+
+In the previous example, you would remove the attributes field and could deploy it later in your terraform with this snippet:
+
+	resource "elastic_kibana_saved_object_content" "test" {
+                attributes = "${data.template_file.timelion.rendered}"
+                saved_object_type = "${elastic_kibana_saved_object.test.saved_object_type}"
+        }
 
 # Todo aka Request for Pull Requests
 
