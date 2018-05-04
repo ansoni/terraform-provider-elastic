@@ -70,6 +70,7 @@ In the previous example, you would remove the attributes field and could deploy 
 	resource "elastic_kibana_saved_object_content" "test" {
                 attributes = "${data.template_file.timelion.rendered}"
                 saved_object_type = "${elastic_kibana_saved_object.test.saved_object_type}"
+                saved_object_id = "${elastic_kibana_saved_object.test.id}"
         }
 
 # Todo aka Request for Pull Requests
