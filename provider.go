@@ -48,10 +48,7 @@ func Provider() terraform.ResourceProvider {
 		},
                 ResourcesMap: map[string]*schema.Resource{
 			"elastic_kibana_saved_object":   resourceKibanaSavedObject(),
-			"elastic_kibana_index_pattern":  resourceKibanaIndexPattern(),
-			"elastic_kibana_saved_search":   resourceKibanaSavedSearch(),
-			"elastic_kibana_visualization":  resourceKibanaVisualization(),
-			"elastic_kibana_dashboard":      resourceKibanaDashboard(),
+			"elastic_kibana_saved_object_content":   resourceKibanaSavedObjectContent(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
