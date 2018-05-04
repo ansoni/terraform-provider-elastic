@@ -12,7 +12,7 @@ type SavedObjectHeader struct {
         ObjectType string `json:"type,omitempty"`
         UpdatedAt string `json:"updated_at,omitempty"`
         Version int `json:"version,omitempty"`
-	Attributes interface{} `json:"attributes"`
+	Attributes map[string]interface{} `json:"attributes"`
 }
 
 

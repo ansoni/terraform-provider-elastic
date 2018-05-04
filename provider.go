@@ -59,13 +59,17 @@ func Provider() terraform.ResourceProvider {
 
 type ElasticInfo struct {
 	kibanaUrl string
+	kibanaUsername string
+	kibanaPassword string
 	elasticsearchUrl string
 
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	url := d.Get("kibana_url").(string)
+	kibanaUsername := d.Get("kibana_username").(string)
+	kibanaPassword := d.Get("kibana_password").(string)
 	esUrl := d.Get("elasticsearch_url").(string)
-	elasticInfo := &ElasticInfo{kibanaUrl: url, elasticsearchUrl: esUrl }	
+	elasticInfo := &ElasticInfo{kibanaUrl: url, elasticsearchUrl: esUrl, kibanaUsername:kibanaUsername, kibanaPassword:kibanaPassword }	
 	return elasticInfo, nil
 }

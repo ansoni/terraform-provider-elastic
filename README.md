@@ -25,7 +25,7 @@ You should have a whole bunch of visualizations built off of the Shakespeare exa
 
 Supported Types:  timelion-sheet, index-pattern, search, visualization, dashboard
 
-Use a template to modify a SavedSearch Attributes item
+Use a template to modify a SavedSearch Attributes item.  The attributes field should refence the attributes field inside of a saved_objects api Get request. 
 
 	data "template_file" "timelion" {
 		template = <<EOF

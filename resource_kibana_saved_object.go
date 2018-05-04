@@ -21,16 +21,19 @@ func resourceKibanaSavedObject() *schema.Resource {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
-				ValidateFunc: validation.StringInSlice([]string{ "index-pattern", "visualization", "search", "timelion-sheet",}, false),
+				ValidateFunc: validation.StringInSlice([]string{ "index-pattern", "visualization", "search", "timelion-sheet","dashboard",}, false),
+			},
+			"object_id": &schema.Schema{
+				Type:     schema.TypeString,
+				ForceNew: true,
+				Optional: true,
 			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Optional: true,
 			},
 			"description": &schema.Schema{
 				Type:     schema.TypeString,
-				ForceNew: true,
 				Required: true,
 			},
 			"attributes": &schema.Schema{
@@ -43,15 +46,24 @@ func resourceKibanaSavedObject() *schema.Resource {
 
 func resourceElasticSavedObjectCreate(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
-	_ = d.Get("name").(string)
-
 	attributes := d.Get("attributes").(string)
+
 	saved_object_type := d.Get("saved_object_type").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v", url, saved_object_type)
 
 	var savedObjectHeader SavedObjectHeader
 	json.Unmarshal([]byte(attributes), &savedObjectHeader.Attributes)
+	name, found := d.GetOk("name")
+	if found {
+		savedObjectHeader.Attributes["title"]=name.(string)
+	}
+/*
+	object_id, found := d.GetOk("object_id")
+	if found {
+		savedObjectHeader.Id=object_id.(string)
+	}
+*/
 	body, err := json.Marshal(&savedObjectHeader)
 	if err != nil {
 		return err
@@ -99,6 +111,10 @@ func resourceElasticSavedObjectUpdate(d *schema.ResourceData, meta interface{}) 
 	attributes := d.Get("attributes").(string)
 	var savedObjectHeader SavedObjectHeader
 	json.Unmarshal([]byte(attributes), &savedObjectHeader.Attributes)
+	name, found := d.GetOk("name")
+	if found {
+		savedObjectHeader.Attributes["title"]=name.(string)
+	}
 	body, err := json.Marshal(&savedObjectHeader)
 	if err != nil {
 		return err
