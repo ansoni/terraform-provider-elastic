@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"net/http"
 	"bytes"
+	"log"
 	"io/ioutil"
 )
 
@@ -29,8 +30,11 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	var req *http.Request
 	var err error
 	if buffer != "" {
+		log.Printf("Reauest %s, %s => %s", requestType, url, buffer)
 		req, err = http.NewRequest(requestType, url, bytes.NewBufferString(buffer))
 	} else {
+		log.Printf("Reauest %s, %s", requestType, url)
+		req, err = http.NewRequest(requestType, url, bytes.NewBufferString(buffer))
 		req, err = http.NewRequest(requestType, url, nil)
 	}
 	if err != nil {
@@ -48,6 +52,7 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	defer resp.Body.Close()
 	
 	respBody, err := ioutil.ReadAll(resp.Body)
+	log.Printf("Respose: %s", respBody)
 	if err != nil {
 		return nil, err
 	}

@@ -48,6 +48,9 @@ func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interf
 
 	var existingSavedObject SavedObjectHeader
 	json.Unmarshal(*existingSavedObjectBytes, &existingSavedObject)
+	existingSavedObject.UpdatedAt=""
+	existingSavedObject.Id=""
+	existingSavedObject.ObjectType=""
 
 	if len(existingSavedObject.Attributes) != 0 {
 		errors.New(fmt.Sprintf("Existing Object: %s, already has content: %v", object_id, existingSavedObject.Attributes))
@@ -106,6 +109,10 @@ func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+
+	savedObjectHeader.UpdatedAt=""
+	savedObjectHeader.Id=""
+	savedObjectHeader.ObjectType=""
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
 	respBody, err := putKibRequest(d, meta, url, string(body))
