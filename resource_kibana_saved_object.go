@@ -64,16 +64,12 @@ func resourceElasticSavedObjectCreate(d *schema.ResourceData, meta interface{}) 
 	if found {
 		savedObjectHeader.Attributes["title"]=name.(string)
 	}
-/*
-	object_id, found := d.GetOk("object_id")
-	if found {
-		savedObjectHeader.Id=object_id.(string)
-	}
-*/
+
 	body, err := json.Marshal(&savedObjectHeader)
 	if err != nil {
 		return err
 	}
+        log.Printf("Create: %v", body)
 
 	respBody, err := postKibRequest(d, meta, url, username, password, string(body))
 	if err != nil {
@@ -112,6 +108,7 @@ func resourceElasticSavedObjectRead(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceElasticSavedObjectUpdate(d *schema.ResourceData, meta interface{}) error {
+
 	url := meta.(*ElasticInfo).kibanaUrl
 	username := meta.(*ElasticInfo).kibanaUsername
 	password := meta.(*ElasticInfo).kibanaPassword

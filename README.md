@@ -6,8 +6,9 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Plea
 
 	go build
 
-# Install
+# Install (globally on machine)
 
+	mkdir -p ~/.terraform.d/plugins
 	cp terraform-provider-elastic ~/.terraform.d/plugins/	
 
 # Run Example
