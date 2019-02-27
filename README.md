@@ -75,8 +75,6 @@ In the previous example, you would remove the attributes field and could deploy 
 
 # Todo aka Request for Pull Requests
 
-- [ ] No SSL
-- [ ] No Auth
 - [ ] No Watcher Support
 - [ ] No Graph Support
 - [ ] No Canvas Support

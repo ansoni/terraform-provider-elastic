@@ -23,7 +23,7 @@ func getKibClient(d *schema.ResourceData, meta interface{}) *http.Client {
 	return &http.Client{}
 }
 
-func genericKibRequest(requestType string, d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error ) {
+func genericKibRequest(requestType string, d *schema.ResourceData, meta interface{}, url string, username string, password string, buffer string) (*[]byte, error ) {
 
 	client := getKibClient(d, meta)
 
@@ -39,6 +39,10 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	}
 	if err != nil {
 		return nil, err
+	}
+
+	if username != "" {
+		req.SetBasicAuth(username, password)
 	}
 
 	req.Header.Add("kbn-xsrf", "true")
@@ -60,18 +64,18 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	return &respBody, nil
 }
 
-func postKibRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
-	return genericKibRequest("POST", d, meta, url, buffer)
+func postKibRequest(d *schema.ResourceData, meta interface{}, url string, username string, password string, buffer string) (*[]byte, error) {
+	return genericKibRequest("POST", d, meta, url, username, password, buffer)
 }
 
-func getKibRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
-	return genericKibRequest("GET", d, meta, url, "")
+func getKibRequest(d *schema.ResourceData, meta interface{}, url string, username string, password string) (*[]byte, error) {
+	return genericKibRequest("GET", d, meta, url, username, password, "")
 }
 
-func putKibRequest(d *schema.ResourceData, meta interface{}, url string, buffer string) (*[]byte, error) {
-	return genericKibRequest("PUT", d, meta, url, buffer)
+func putKibRequest(d *schema.ResourceData, meta interface{}, url string, username string, password string, buffer string) (*[]byte, error) {
+	return genericKibRequest("PUT", d, meta, url, username, password, buffer)
 }
 
-func deleteKibRequest(d *schema.ResourceData, meta interface{}, url string) (*[]byte, error) {
-	return genericKibRequest("DELETE", d, meta, url, "")
+func deleteKibRequest(d *schema.ResourceData, meta interface{}, url string, username string, password string) (*[]byte, error) {
+	return genericKibRequest("DELETE", d, meta, url, username, password, "")
 }

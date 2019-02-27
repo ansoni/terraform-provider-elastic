@@ -36,12 +36,14 @@ func resourceKibanaSavedObjectContent() *schema.Resource {
 
 func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
+	username := meta.(*ElasticInfo).kibanaUsername
+	password := meta.(*ElasticInfo).kibanaPassword
 	attributes := d.Get("attributes").(string)
 	object_id := d.Get("saved_object_id").(string)
 	saved_object_type := d.Get("saved_object_type").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, object_id)
-	existingSavedObjectBytes, err := getKibRequest(d, meta, url)
+	existingSavedObjectBytes, err := getKibRequest(d, meta, url, username, password)
 	if err != nil {
 		return err
 	}
@@ -63,7 +65,7 @@ func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	respBody, err := putKibRequest(d, meta, url, string(body))
+	respBody, err := putKibRequest(d, meta, url, username, password, string(body))
 	if err != nil {
 		return err
 	}
@@ -83,11 +85,13 @@ func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interf
 
 func resourceElasticSavedObjectContentRead(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
+	username := meta.(*ElasticInfo).kibanaUsername
+	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
 	saved_object_type := d.Get("saved_object_type").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
-	respBody, err := getKibRequest(d, meta, url)
+	respBody, err := getKibRequest(d, meta, url, username, password)
 	if err != nil {
        	    return err
 	}
@@ -99,6 +103,8 @@ func resourceElasticSavedObjectContentRead(d *schema.ResourceData, meta interfac
 
 func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
+	username := meta.(*ElasticInfo).kibanaUsername
+	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
 	saved_object_type := d.Get("saved_object_type").(string)
 
@@ -115,7 +121,7 @@ func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interf
 	savedObjectHeader.ObjectType=""
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
-	respBody, err := putKibRequest(d, meta, url, string(body))
+	respBody, err := putKibRequest(d, meta, url, username, password, string(body))
 	if err != nil {
 		return err
 	}
@@ -132,11 +138,13 @@ func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interf
 
 func resourceElasticSavedObjectContentDelete(d *schema.ResourceData, meta interface{}) error {
 	url := meta.(*ElasticInfo).kibanaUrl
+	username := meta.(*ElasticInfo).kibanaUsername
+	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
 	saved_object_type := d.Get("saved_object_type").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
-	_, err := deleteKibRequest(d, meta, url)	
+	_, err := deleteKibRequest(d, meta, url, username, password)	
 	if err != nil {
        		return err    
 	}
