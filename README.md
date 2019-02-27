@@ -4,7 +4,6 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Plea
 
 # Build
 
-	go get
 	go build
 
 # Install
