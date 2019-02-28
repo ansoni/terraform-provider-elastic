@@ -49,6 +49,7 @@ func Provider() terraform.ResourceProvider {
                 ResourcesMap: map[string]*schema.Resource{
 			"elastic_kibana_saved_object":   resourceKibanaSavedObject(),
 			"elastic_kibana_saved_object_content":   resourceKibanaSavedObjectContent(),
+			"elastic_elasticsearch_index_data":   resourceElasticsearchIndexData(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -59,6 +60,8 @@ type ElasticInfo struct {
 	kibanaUsername string
 	kibanaPassword string
 	elasticsearchUrl string
+	elasticsearchUsername string
+	elasticsearchPassword string
 
 }
 
@@ -66,7 +69,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	url := d.Get("kibana_url").(string)
 	kibanaUsername := d.Get("kibana_username").(string)
 	kibanaPassword := d.Get("kibana_password").(string)
+	elasticsearchUsername := d.Get("elasticsearch_username").(string)
+	elasticsearchPassword := d.Get("elasticsearch_password").(string)
 	esUrl := d.Get("elasticsearch_url").(string)
-	elasticInfo := &ElasticInfo{kibanaUrl: url, elasticsearchUrl: esUrl, kibanaUsername:kibanaUsername, kibanaPassword:kibanaPassword }	
+	elasticInfo := &ElasticInfo{kibanaUrl: url, elasticsearchUrl: esUrl, kibanaUsername:kibanaUsername, kibanaPassword:kibanaPassword, elasticsearchUsername:elasticsearchUsername, elasticsearchPassword:elasticsearchPassword }	
 	return elasticInfo, nil
 }

@@ -1,8 +1,15 @@
 provider "elastic" {
   kibana_url = "http://127.0.0.1:5601"
+  elasticsearch_url = "http://127.0.0.1:9200"
+}
+
+resource "elastic_elasticsearch_index_data" "shakespeare" {
+  index_name = "shakespeare",
+  file_url = "https://download.elastic.co/demos/kibana/gettingstarted/shakespeare_6.0.json"
 }
 
 resource "elastic_kibana_saved_object" "index_pattern" {
+	depends_on = [ "elastic_kibana_saved_object.index_pattern" ]
 	saved_object_type = "index-pattern"
 	name = "shakespeare"
 	description = "Shakespeare Index Pattern"
