@@ -16,11 +16,6 @@ func resourceElasticsearchWatcher() *schema.Resource {
 		Update: resourceElasticWatcherUpdate,
 		Delete: resourceElasticWatcherDelete,
 		Schema: map[string]*schema.Schema{
-			"space_id": &schema.Schema{
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
-			},
 			"active": &schema.Schema{
 				Type:     schema.TypeBool,
 				Default: true,

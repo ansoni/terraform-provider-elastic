@@ -4,6 +4,7 @@ provider "elastic" {
 }
 
 resource "elastic_elasticsearch_watcher" "watcherA" {
+  active = true
   name = "awesome"
   trigger = <<-EOF
 	{

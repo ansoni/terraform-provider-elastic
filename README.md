@@ -13,13 +13,16 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Plea
 
 # Run Example
 
+After installing the provider...
+
 	cd example
 	docker-compose up
-	bash load_data.sh
-	terraform init
-	terraform apply
+	cd basic
+	terraform init && terraform apply
+	cd ../xpack # need to accept X-Pack Trial in Kibana
+	terraform init && terraform apply
 
-You should have a whole bunch of visualizations built off of the Shakespeare example.  
+You should have a few visualizations built off of the Elastic Shakespeare data.  I tried to have an example of every resource in the example folder. 
 
 # Kibana Space Provisioning
 
