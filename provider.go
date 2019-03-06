@@ -47,6 +47,7 @@ func Provider() terraform.ResourceProvider {
                         },
 		},
                 ResourcesMap: map[string]*schema.Resource{
+			"elastic_kibana_space":   resourceKibanaSpace(),
 			"elastic_kibana_saved_object":   resourceKibanaSavedObject(),
 			"elastic_kibana_saved_object_content":   resourceKibanaSavedObjectContent(),
 			"elastic_elasticsearch_index_data":   resourceElasticsearchIndexData(),

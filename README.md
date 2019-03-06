@@ -21,6 +21,17 @@ A Terraform Provider for Elastic.co products (Elasticsearch, Kibana, etc).  Plea
 
 You should have a whole bunch of visualizations built off of the Shakespeare example.  
 
+# Kibana Space Provisioning
+
+Provision a Kibana Space
+
+	resource "elastic_kibana_space" "engineering" {
+	  space_id = "engineering"
+	  name = "Engineering-"
+	  description = "Where- Engineering Keeps Its Gold!"
+	  initials = "aa"
+	}
+
 # Generic Saved-Object
 
 Supported Types:  timelion-sheet, index-pattern, search, visualization, dashboard

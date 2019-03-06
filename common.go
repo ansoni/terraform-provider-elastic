@@ -9,7 +9,42 @@ import (
         "io"
         "os"
         "fmt"
+        _ "reflect"
 )
+
+type SavedObjectHeader struct {
+        Id string `json:"id,omitempty"`
+        ObjectType string `json:"type,omitempty"`
+        UpdatedAt string `json:"updated_at,omitempty"`
+        Version int `json:"version,omitempty"`
+	Attributes map[string]interface{} `json:"attributes"`
+}
+
+type Space struct {
+        Id string `json:"id,omitempty"`
+        Name string `json:"name,omitempty"`
+        Description string `json:"description,omitempty"`
+        Color string `json:"color,omitempty"`
+        Initials string `json:"initials,omitempty"`
+}
+
+func kibanaUrl(d *schema.ResourceData, meta interface{}) string {
+	url := meta.(*ElasticInfo).kibanaUrl
+	value, found := d.GetOk("space_id")
+	if ! found {
+		return url
+	}
+	return fmt.Sprintf("%v/s/%v", url, value)
+}
+
+func populateStruct(d *schema.ResourceData, key string, callback func(interface{})) {
+	value, found := d.GetOk(key)
+        if ! found {
+		log.Printf("Not Found: %v in %v", key, d)
+		return
+	} 
+	callback(value)
+}
 
 func getFileOrUrlReader(d *schema.ResourceData) (io.Reader, error) {
 	var filePath string
@@ -37,13 +72,6 @@ func getFileOrUrlReader(d *schema.ResourceData) (io.Reader, error) {
 	return file, nil
 }
 
-type SavedObjectHeader struct {
-        Id string `json:"id,omitempty"`
-        ObjectType string `json:"type,omitempty"`
-        UpdatedAt string `json:"updated_at,omitempty"`
-        Version int `json:"version,omitempty"`
-	Attributes map[string]interface{} `json:"attributes"`
-}
 
 func getKibClient(d *schema.ResourceData, meta interface{}) *http.Client {
 	return &http.Client{}
@@ -110,9 +138,12 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	defer resp.Body.Close()
 	
 	respBody, err := ioutil.ReadAll(resp.Body)
-	log.Printf("Respose: %s", respBody)
+	log.Printf("Response: %s", respBody)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode != 200 && resp.StatusCode != 204 {
+		return nil, fmt.Errorf("Request %v failed with error %v, Body: %s", url, resp.StatusCode, respBody)
 	}
 	
 	return &respBody, nil

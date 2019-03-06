@@ -16,6 +16,11 @@ func resourceKibanaSavedObjectContent() *schema.Resource {
 		Update: resourceElasticSavedObjectContentUpdate,
 		Delete: resourceElasticSavedObjectContentDelete,
 		Schema: map[string]*schema.Schema{
+			"space_id": &schema.Schema{
+                                Type:     schema.TypeString,
+                                ForceNew: true,
+                                Optional: true,
+                        },
 			"saved_object_id": &schema.Schema{
 				Type:     schema.TypeString,
 				ForceNew: true,
@@ -35,7 +40,7 @@ func resourceKibanaSavedObjectContent() *schema.Resource {
 }
 
 func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interface{}) error {
-	url := meta.(*ElasticInfo).kibanaUrl
+	url := kibanaUrl(d, meta)
 	username := meta.(*ElasticInfo).kibanaUsername
 	password := meta.(*ElasticInfo).kibanaPassword
 	attributes := d.Get("attributes").(string)
@@ -84,7 +89,7 @@ func resourceElasticSavedObjectContentCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceElasticSavedObjectContentRead(d *schema.ResourceData, meta interface{}) error {
-	url := meta.(*ElasticInfo).kibanaUrl
+	url := kibanaUrl(d, meta)
 	username := meta.(*ElasticInfo).kibanaUsername
 	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
@@ -102,7 +107,7 @@ func resourceElasticSavedObjectContentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interface{}) error {
-	url := meta.(*ElasticInfo).kibanaUrl
+	url := kibanaUrl(d, meta)
 	username := meta.(*ElasticInfo).kibanaUsername
 	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
@@ -137,7 +142,7 @@ func resourceElasticSavedObjectContentUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceElasticSavedObjectContentDelete(d *schema.ResourceData, meta interface{}) error {
-	url := meta.(*ElasticInfo).kibanaUrl
+	url := kibanaUrl(d, meta)
 	username := meta.(*ElasticInfo).kibanaUsername
 	password := meta.(*ElasticInfo).kibanaPassword
 	id := d.Id()
