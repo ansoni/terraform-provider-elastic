@@ -17,6 +17,14 @@ resource "elastic_kibana_space" "engineering" {
   initials = "aa"
 }
 
+# Canvas
+resource "elastic_kibana_canvas" "engineering" {
+  canvas_id = "rer"
+  name = "mah"
+  space_id = "engineering"
+  contents = "${file("./canvas.json")}"
+}
+
 # Index Pattern into workspace
 resource "elastic_kibana_saved_object" "index_pattern_space" {
 	space_id = "${elastic_kibana_space.engineering.id}"

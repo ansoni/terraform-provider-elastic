@@ -26,10 +26,21 @@ You should have a whole bunch of visualizations built off of the Shakespeare exa
 Provision a Kibana Space
 
 	resource "elastic_kibana_space" "engineering" {
-	  space_id = "engineering"
+	  space_id = "engineering" 
 	  name = "Engineering-"
 	  description = "Where- Engineering Keeps Its Gold!"
 	  initials = "aa"
+	}
+
+# Canvas
+
+Canvas API is a bit undocumented, but this code does work against 6.6.1
+
+	resource "elastic_kibana_canvas" "engineering" {
+	  canvas_id = "rer"                     # Your unique name for this canvas
+	  name = "mah"                          # Display name for this canvas
+	  space_id = "engineering"              # Optional Space to use
+	  contents = "${file("./canvas.json")}" # document exported from Kibana Canvas API
 	}
 
 # Generic Saved-Object
