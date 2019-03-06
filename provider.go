@@ -52,6 +52,7 @@ func Provider() terraform.ResourceProvider {
 			"elastic_kibana_saved_object":   resourceKibanaSavedObject(),
 			"elastic_kibana_saved_object_content":   resourceKibanaSavedObjectContent(),
 			"elastic_elasticsearch_index_data":   resourceElasticsearchIndexData(),
+			"elastic_elasticsearch_watcher":   resourceElasticsearchWatcher(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

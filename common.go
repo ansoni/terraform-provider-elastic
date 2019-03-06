@@ -28,6 +28,15 @@ type Space struct {
         Initials string `json:"initials,omitempty"`
 }
 
+type Watcher struct {
+        Trigger map[string]interface{} `json:"trigger"`
+        Input map[string]interface{} `json:"input"`
+        Condition map[string]interface{} `json:"condition"`
+        Actions map[string]interface{} `json:"actions"`
+        Metadata map[string]interface{} `json:"metadata"`
+        ThrottlePeriod string `json:"metadata"`
+}
+
 func kibanaUrl(d *schema.ResourceData, meta interface{}) string {
 	url := meta.(*ElasticInfo).kibanaUrl
 	value, found := d.GetOk("space_id")
@@ -142,7 +151,8 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 && resp.StatusCode != 204 {
+	if resp.StatusCode != 200 && resp.StatusCode != 204 && resp.StatusCode != 201 {
+	// TODO: ^yuck
 		return nil, fmt.Errorf("Request %v failed with error %v, Body: %s", url, resp.StatusCode, respBody)
 	}
 	
