@@ -149,7 +149,20 @@ func resourceElasticSavedObjectContentDelete(d *schema.ResourceData, meta interf
 	saved_object_type := d.Get("saved_object_type").(string)
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
-	_, err := deleteKibRequest(d, meta, url, username, password)	
+	respBody, err := getKibRequest(d, meta, url, username, password)
+	if err != nil {
+		return err
+        }	
+
+	var savedObject SavedObjectHeader
+	json.Unmarshal(*respBody, &savedObject)	
+        savedObject.Attributes = make(map[string]interface{})
+	savedObject.UpdatedAt=""
+	savedObject.Id=""
+	savedObject.ObjectType=""
+	body, err := json.Marshal(&savedObject)
+     
+	_, err = putKibRequest(d, meta, url, username, password, string(body))	
 	if err != nil {
        		return err    
 	}

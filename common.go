@@ -12,6 +12,16 @@ import (
         _ "reflect"
 )
 
+type RestError struct {
+        StatusCode int
+        Msg string
+}
+
+func (e *RestError) Error() string { 
+        return fmt.Sprintf("StatusCode: %d - %s", e.StatusCode, e.Msg)
+}
+
+
 type SavedObjectHeader struct {
         Id string `json:"id,omitempty"`
         ObjectType string `json:"type,omitempty"`
@@ -151,9 +161,9 @@ func genericKibRequest(requestType string, d *schema.ResourceData, meta interfac
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 && resp.StatusCode != 204 && resp.StatusCode != 201 {
+	if resp.StatusCode != 200 && resp.StatusCode != 204 && resp.StatusCode != 201 && resp.StatusCode != 404 {
 	// TODO: ^yuck
-		return nil, fmt.Errorf("Request %v failed with error %v, Body: %s", url, resp.StatusCode, respBody)
+		return nil, &RestError{resp.StatusCode, fmt.Sprintf("Request %v failed with error %v, Body: %s", url, resp.StatusCode, respBody)}
 	}
 	
 	return &respBody, nil

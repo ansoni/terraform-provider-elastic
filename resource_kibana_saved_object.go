@@ -103,13 +103,18 @@ func resourceElasticSavedObjectRead(d *schema.ResourceData, meta interface{}) er
 
 	url = fmt.Sprintf("%v/api/saved_objects/%v/%v", url, saved_object_type, id)
 	respBody, err := getKibRequest(d, meta, url, username, password)
-	if err != nil {
-       	    return err
-	}
-
-	var savedObject SavedObjectHeader
-	json.Unmarshal(*respBody, &savedObject)
-	return nil
+        switch err := err.(type) {
+        case nil:
+	  var savedObject SavedObjectHeader
+	  json.Unmarshal(*respBody, &savedObject)
+	  return nil
+        case *RestError:
+          if err.StatusCode == 404 {
+          }
+          return err
+        default:
+          return err
+        }
 }
 
 func resourceElasticSavedObjectUpdate(d *schema.ResourceData, meta interface{}) error {
