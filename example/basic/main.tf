@@ -5,7 +5,7 @@ provider "elastic" {
 
 # Import some data!
 resource "elastic_elasticsearch_index_data" "shakespeare" {
-  index_name = "shakespeare",
+  index_name = "shakespeare"
   file_url = "https://download.elastic.co/demos/kibana/gettingstarted/shakespeare_6.0.json"
 }
 
@@ -52,7 +52,7 @@ resource "elastic_kibana_saved_object_content" "index_pattern_content" {
 # Use a template so we can replace the index
 data "template_file" "search_Henry_IV" {
   template = "${file("./objects/search0.json")}"
-  vars {
+  vars = {
     index-pattern = "${elastic_kibana_saved_object.index_pattern.id}"
 
   }
@@ -67,7 +67,7 @@ resource "elastic_kibana_saved_object" "search" {
 
 data "template_file" "visualization" {
   template = "${file("./objects/visualization0.json")}"
-  vars {
+  vars = {
     index-pattern = "${elastic_kibana_saved_object.index_pattern.id}"
   }
 }
